@@ -1,6 +1,9 @@
-import { Link, useLocation } from "@tanstack/react-router";
-import { LayoutDashboard, UtensilsCrossed, ShoppingBag, Armchair, Receipt, Sparkles } from "lucide-react";
-import type { ReactNode } from "react";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { LayoutDashboard, UtensilsCrossed, ShoppingBag, Armchair, Receipt, LogOut, ChevronLeft, ChevronRight, Shield } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
+import { Logo } from "@/components/Logo";
+import { useAuth } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -12,23 +15,66 @@ const navItems = [
 
 export function AdminLayout({ children, title, subtitle, actions }: { children: ReactNode; title: string; subtitle?: string; actions?: ReactNode }) {
   const { pathname } = useLocation();
+  const nav = useNavigate();
+  const { user, isStaff, isAdmin, loading, signOut } = useAuth();
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    if (!loading && (!user || !isStaff)) {
+      nav({ to: "/auth" });
+    }
+  }, [loading, user, isStaff, nav]);
+
+  if (loading || !user) {
+    return (
+      <div className="min-h-dvh flex items-center justify-center bg-secondary/40">
+        <p className="text-muted-foreground text-sm">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isStaff) {
+    return (
+      <div className="min-h-dvh flex items-center justify-center bg-secondary/40 p-6">
+        <div className="max-w-md text-center bg-card rounded-2xl border border-border p-8 shadow-[var(--shadow-soft)]">
+          <Shield className="size-10 text-muted-foreground mx-auto mb-3" />
+          <h2 className="font-serif text-2xl mb-2">Access pending</h2>
+          <p className="text-sm text-muted-foreground mb-6">
+            Your account exists but no role has been assigned. Please ask an administrator to grant you staff or admin access.
+          </p>
+          <Button onClick={() => signOut()} variant="outline" className="w-full">Sign out</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-dvh flex bg-secondary/40">
-      <aside className="hidden md:flex w-64 shrink-0 flex-col border-r border-border bg-sidebar">
-        <Link to="/admin" className="px-6 py-7 border-b border-sidebar-border block">
-          <div className="flex items-center gap-2">
-            <div className="size-9 rounded-lg flex items-center justify-center text-primary-foreground" style={{ background: "var(--gradient-primary)" }}>
-              <Sparkles className="size-5" />
-            </div>
-            <div>
-              <h1 className="font-serif text-lg leading-none text-primary">Verdant Bistro</h1>
-              <p className="text-[11px] uppercase tracking-widest text-muted-foreground mt-1">Admin Panel</p>
-            </div>
-          </div>
-        </Link>
+      <aside
+        className={`hidden md:flex shrink-0 flex-col border-r border-border bg-sidebar transition-all duration-300 ${
+          collapsed ? "w-20" : "w-64"
+        }`}
+      >
+        <div className="px-4 py-6 border-b border-sidebar-border flex items-center justify-between gap-2">
+          <Link to="/admin" className="flex items-center gap-2 min-w-0">
+            <Logo size={36} />
+            {!collapsed && (
+              <div className="min-w-0">
+                <h1 className="font-serif text-lg leading-none text-primary truncate">Golden Spoon</h1>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">{isAdmin ? "Admin" : "Staff"}</p>
+              </div>
+            )}
+          </Link>
+          <button
+            onClick={() => setCollapsed((c) => !c)}
+            className="p-1.5 rounded-md text-muted-foreground hover:bg-sidebar-accent hover:text-primary"
+            aria-label="Toggle sidebar"
+          >
+            {collapsed ? <ChevronRight className="size-4" /> : <ChevronLeft className="size-4" />}
+          </button>
+        </div>
 
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="flex-1 p-3 space-y-1">
           {navItems.map((item) => {
             const active = pathname === item.to || (item.to !== "/admin" && pathname.startsWith(item.to));
             const Icon = item.icon;
@@ -36,26 +82,39 @@ export function AdminLayout({ children, title, subtitle, actions }: { children: 
               <Link
                 key={item.to}
                 to={item.to}
+                title={collapsed ? item.label : undefined}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                   active
                     ? "bg-sidebar-accent text-sidebar-accent-foreground"
                     : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
-                }`}
+                } ${collapsed ? "justify-center" : ""}`}
               >
-                <Icon className="size-4" />
-                {item.label}
+                <Icon className="size-4 shrink-0" />
+                {!collapsed && item.label}
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-4 border-t border-sidebar-border">
-          <Link
-            to="/"
-            className="block text-xs text-muted-foreground hover:text-primary transition-colors text-center"
+        <div className="p-3 border-t border-sidebar-border space-y-1">
+          {!collapsed && (
+            <p className="text-[11px] text-muted-foreground px-3 truncate" title={user.email ?? ""}>
+              {user.email}
+            </p>
+          )}
+          <button
+            onClick={() => signOut()}
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-destructive/10 hover:text-destructive w-full ${collapsed ? "justify-center" : ""}`}
+            title={collapsed ? "Sign out" : undefined}
           >
-            ← Back to public site
-          </Link>
+            <LogOut className="size-4 shrink-0" />
+            {!collapsed && "Sign out"}
+          </button>
+          {!collapsed && (
+            <Link to="/" className="block text-[11px] text-muted-foreground hover:text-primary text-center pt-2">
+              ← Back to public site
+            </Link>
+          )}
         </div>
       </aside>
 
