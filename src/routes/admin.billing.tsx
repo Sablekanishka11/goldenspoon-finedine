@@ -67,7 +67,10 @@ function Billing() {
                   <p className="text-xs uppercase tracking-widest text-muted-foreground">Invoice</p>
                   <p className="font-serif text-2xl">INV-{String(selected.order_number).padStart(4, "0")}</p>
                 </div>
-                <Button size="icon" variant="outline" onClick={() => window.print()}><Printer className="size-4" /></Button>
+                <div className="flex gap-1">
+                  <Button size="icon" variant="outline" onClick={() => downloadPdf(selected, items)} title="Download PDF"><Download className="size-4" /></Button>
+                  <Button size="icon" variant="outline" onClick={() => window.print()} title="Print"><Printer className="size-4" /></Button>
+                </div>
               </div>
               <div className="text-sm space-y-1 mb-6">
                 <p><span className="text-muted-foreground">Customer:</span> {selected.customer_name ?? "—"}</p>
@@ -95,4 +98,89 @@ function Billing() {
       </div>
     </AdminLayout>
   );
+}
+
+const pdfStyles = StyleSheet.create({
+  page: { padding: 50, fontSize: 11, fontFamily: "Helvetica", color: "#1a1a1a" },
+  header: { borderBottomWidth: 2, borderBottomColor: "#2d5a3d", paddingBottom: 16, marginBottom: 24 },
+  brand: { fontSize: 22, fontFamily: "Helvetica-Bold", color: "#2d5a3d" },
+  tagline: { fontSize: 9, color: "#888", marginTop: 4, letterSpacing: 1 },
+  invoiceTitle: { fontSize: 16, fontFamily: "Helvetica-Bold", marginBottom: 4 },
+  meta: { flexDirection: "row", justifyContent: "space-between", marginBottom: 24 },
+  metaCol: { flexDirection: "column", gap: 4 },
+  label: { fontSize: 9, color: "#888", textTransform: "uppercase", letterSpacing: 1 },
+  value: { fontSize: 11 },
+  tableHeader: { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: "#ccc", paddingVertical: 8, marginTop: 12 },
+  th: { fontSize: 9, fontFamily: "Helvetica-Bold", textTransform: "uppercase", color: "#666" },
+  row: { flexDirection: "row", paddingVertical: 8, borderBottomWidth: 0.5, borderBottomColor: "#eee" },
+  cellQty: { width: "10%" },
+  cellName: { width: "60%" },
+  cellPrice: { width: "15%", textAlign: "right" },
+  cellTotal: { width: "15%", textAlign: "right" },
+  totalsRow: { flexDirection: "row", justifyContent: "flex-end", marginTop: 16, paddingTop: 12, borderTopWidth: 2, borderTopColor: "#2d5a3d" },
+  totalLabel: { fontSize: 13, fontFamily: "Helvetica-Bold", marginRight: 24 },
+  totalValue: { fontSize: 14, fontFamily: "Helvetica-Bold", color: "#2d5a3d" },
+  footer: { position: "absolute", bottom: 30, left: 50, right: 50, textAlign: "center", fontSize: 9, color: "#888", borderTopWidth: 0.5, borderTopColor: "#ccc", paddingTop: 10 },
+});
+
+function InvoicePDF({ order, items }: { order: any; items: any[] }) {
+  return (
+    <Document>
+      <Page size="A4" style={pdfStyles.page}>
+        <View style={pdfStyles.header}>
+          <Text style={pdfStyles.brand}>Golden Spoon</Text>
+          <Text style={pdfStyles.tagline}>SERVING EXCELLENCE, ONE TABLE AT A TIME</Text>
+        </View>
+
+        <View style={pdfStyles.meta}>
+          <View style={pdfStyles.metaCol}>
+            <Text style={pdfStyles.invoiceTitle}>Invoice INV-{String(order.order_number).padStart(4, "0")}</Text>
+            <Text style={pdfStyles.value}>Date: {new Date(order.created_at).toLocaleString()}</Text>
+            <Text style={pdfStyles.value}>Status: {order.status}</Text>
+          </View>
+          <View style={pdfStyles.metaCol}>
+            <Text style={pdfStyles.label}>Billed to</Text>
+            <Text style={pdfStyles.value}>{order.customer_name ?? "Walk-in customer"}</Text>
+          </View>
+        </View>
+
+        <View style={pdfStyles.tableHeader}>
+          <Text style={[pdfStyles.th, pdfStyles.cellQty]}>Qty</Text>
+          <Text style={[pdfStyles.th, pdfStyles.cellName]}>Item</Text>
+          <Text style={[pdfStyles.th, pdfStyles.cellPrice]}>Price</Text>
+          <Text style={[pdfStyles.th, pdfStyles.cellTotal]}>Total</Text>
+        </View>
+
+        {items.length === 0 ? (
+          <View style={pdfStyles.row}><Text>No itemised lines for this order.</Text></View>
+        ) : items.map((it) => (
+          <View key={it.id} style={pdfStyles.row}>
+            <Text style={pdfStyles.cellQty}>{it.quantity}</Text>
+            <Text style={pdfStyles.cellName}>{it.item_name}</Text>
+            <Text style={pdfStyles.cellPrice}>${Number(it.price).toFixed(2)}</Text>
+            <Text style={pdfStyles.cellTotal}>${(Number(it.price) * it.quantity).toFixed(2)}</Text>
+          </View>
+        ))}
+
+        <View style={pdfStyles.totalsRow}>
+          <Text style={pdfStyles.totalLabel}>Total Due</Text>
+          <Text style={pdfStyles.totalValue}>${Number(order.total).toFixed(2)}</Text>
+        </View>
+
+        <Text style={pdfStyles.footer}>Thank you for dining with Golden Spoon. © 2025 Made by Kanishka.</Text>
+      </Page>
+    </Document>
+  );
+}
+
+async function downloadPdf(order: any, items: any[]) {
+  const blob = await pdf(<InvoicePDF order={order} items={items} />).toBlob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `invoice-${String(order.order_number).padStart(4, "0")}.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
