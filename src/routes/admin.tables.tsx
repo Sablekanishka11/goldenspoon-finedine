@@ -32,7 +32,7 @@ function TablesAdmin() {
   useEffect(() => { load(); }, []);
 
   async function setStatus(id: string, status: string) {
-    const { error } = await supabase.from("restaurant_tables").update({ status }).eq("id", id);
+    const { error } = await supabase.from("restaurant_tables").update({ status: status as any }).eq("id", id);
     if (!error) { toast.success("Updated"); load(); }
   }
   async function addTable() {
@@ -46,7 +46,7 @@ function TablesAdmin() {
     load();
   }
   async function setBookingStatus(id: string, status: string) {
-    await supabase.from("bookings").update({ status }).eq("id", id);
+    await supabase.from("bookings").update({ status: status as any }).eq("id", id);
     load();
   }
 

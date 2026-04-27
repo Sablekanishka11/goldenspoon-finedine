@@ -42,7 +42,7 @@ function MenuAdmin() {
 
   async function save() {
     if (!form.name.trim()) return toast.error("Name required");
-    const payload = { ...form, name: form.name.trim().slice(0, 100), description: form.description.trim().slice(0, 500), category: form.category.trim().slice(0, 50) || "Mains", price: Math.max(0, Number(form.price)) };
+    const payload = { ...form, name: form.name.trim().slice(0, 100), description: (form.description ?? "").trim().slice(0, 500), category: form.category.trim().slice(0, 50) || "Mains", price: Math.max(0, Number(form.price)) };
     const { error } = editing
       ? await supabase.from("menu_items").update(payload).eq("id", editing.id)
       : await supabase.from("menu_items").insert(payload);
