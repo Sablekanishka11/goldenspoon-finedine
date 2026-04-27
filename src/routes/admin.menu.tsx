@@ -120,3 +120,48 @@ function MenuAdmin() {
     </AdminLayout>
   );
 }
+
+function ImageUploader({ value, onChange }: { value: string; onChange: (url: string) => void }) {
+  const [uploading, setUploading] = useState(false);
+
+  async function onFile(file: File) {
+    if (!file.type.startsWith("image/")) return toast.error("Please choose an image file");
+    if (file.size > 5 * 1024 * 1024) return toast.error("Image must be under 5MB");
+    setUploading(true);
+    const ext = file.name.split(".").pop() ?? "jpg";
+    const path = `${crypto.randomUUID()}.${ext}`;
+    const { error } = await supabase.storage.from("dish-images").upload(path, file, { cacheControl: "3600", upsert: false });
+    if (error) { setUploading(false); return toast.error(error.message); }
+    const { data } = supabase.storage.from("dish-images").getPublicUrl(path);
+    onChange(data.publicUrl);
+    setUploading(false);
+    toast.success("Image uploaded");
+  }
+
+  return (
+    <div>
+      <Label>Dish photo</Label>
+      {value ? (
+        <div className="mt-2 relative rounded-lg overflow-hidden border border-border bg-muted aspect-[4/3]">
+          <img src={_resolveImage(value)} alt="Preview" className="w-full h-full object-cover" />
+          <button type="button" onClick={() => onChange("")} className="absolute top-2 right-2 size-8 rounded-full bg-background/90 backdrop-blur flex items-center justify-center hover:bg-destructive hover:text-destructive-foreground transition">
+            <X className="size-4" />
+          </button>
+        </div>
+      ) : (
+        <label className="mt-2 flex flex-col items-center justify-center aspect-[4/3] border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
+          <Upload className="size-6 text-muted-foreground mb-2" />
+          <span className="text-sm text-muted-foreground">{uploading ? "Uploading..." : "Click to upload (max 5MB)"}</span>
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            disabled={uploading}
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) onFile(f); e.target.value = ""; }}
+          />
+        </label>
+      )}
+      <Input className="mt-2 text-xs" value={value} onChange={(e) => onChange(e.target.value)} placeholder="...or paste image URL" />
+    </div>
+  );
+}
