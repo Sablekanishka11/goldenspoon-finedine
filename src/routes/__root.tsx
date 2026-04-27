@@ -1,5 +1,6 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/lib/auth";
 
 import appCss from "../styles.css?url";
 
@@ -30,11 +31,14 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Verdant Bistro — Restaurant Management" },
-      { name: "description", content: "Modern restaurant management: menu, orders, tables, billing." },
+      { title: "Golden Spoon — Serving excellence, one table at a time" },
+      { name: "description", content: "Golden Spoon — fine dining restaurant. Reserve a table, browse the menu, and experience hospitality at its best." },
+      { property: "og:title", content: "Golden Spoon" },
+      { property: "og:description", content: "Serving excellence, one table at a time." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" },
@@ -61,9 +65,9 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <>
+    <AuthProvider>
       <Outlet />
       <Toaster richColors position="top-right" />
-    </>
+    </AuthProvider>
   );
 }

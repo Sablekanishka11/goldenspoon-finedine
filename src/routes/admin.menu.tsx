@@ -8,8 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Upload, X } from "lucide-react";
 import { toast } from "sonner";
+import { resolveImage as _resolveImage } from "@/lib/images";
 
 export const Route = createFileRoute("/admin/menu")({
   component: MenuAdmin,
@@ -67,7 +68,7 @@ function MenuAdmin() {
       actions={
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild><Button onClick={openNew}><Plus className="mr-2 size-4" /> Add Item</Button></DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-h-[90vh] overflow-y-auto">
             <DialogHeader><DialogTitle className="font-serif text-2xl">{editing ? "Edit item" : "New menu item"}</DialogTitle></DialogHeader>
             <div className="space-y-3">
               <div><Label>Name</Label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} maxLength={100} /></div>
@@ -76,7 +77,7 @@ function MenuAdmin() {
                 <div><Label>Price</Label><Input type="number" step="0.01" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} /></div>
                 <div><Label>Category</Label><Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} maxLength={50} /></div>
               </div>
-              <div><Label>Image URL (optional)</Label><Input value={form.image_url ?? ""} onChange={(e) => setForm({ ...form, image_url: e.target.value })} placeholder="https://..." /></div>
+              <ImageUploader value={form.image_url ?? ""} onChange={(url) => setForm({ ...form, image_url: url })} />
               <div className="flex items-center justify-between border-t border-border pt-3"><Label>Available</Label><Switch checked={form.available} onCheckedChange={(v) => setForm({ ...form, available: v })} /></div>
               <Button onClick={save} className="w-full">{editing ? "Save changes" : "Create item"}</Button>
             </div>
@@ -117,5 +118,50 @@ function MenuAdmin() {
         {filtered.length === 0 && <p className="col-span-full text-center text-muted-foreground py-12">No menu items found.</p>}
       </div>
     </AdminLayout>
+  );
+}
+
+function ImageUploader({ value, onChange }: { value: string; onChange: (url: string) => void }) {
+  const [uploading, setUploading] = useState(false);
+
+  async function onFile(file: File) {
+    if (!file.type.startsWith("image/")) return toast.error("Please choose an image file");
+    if (file.size > 5 * 1024 * 1024) return toast.error("Image must be under 5MB");
+    setUploading(true);
+    const ext = file.name.split(".").pop() ?? "jpg";
+    const path = `${crypto.randomUUID()}.${ext}`;
+    const { error } = await supabase.storage.from("dish-images").upload(path, file, { cacheControl: "3600", upsert: false });
+    if (error) { setUploading(false); return toast.error(error.message); }
+    const { data } = supabase.storage.from("dish-images").getPublicUrl(path);
+    onChange(data.publicUrl);
+    setUploading(false);
+    toast.success("Image uploaded");
+  }
+
+  return (
+    <div>
+      <Label>Dish photo</Label>
+      {value ? (
+        <div className="mt-2 relative rounded-lg overflow-hidden border border-border bg-muted aspect-[4/3]">
+          <img src={_resolveImage(value)} alt="Preview" className="w-full h-full object-cover" />
+          <button type="button" onClick={() => onChange("")} className="absolute top-2 right-2 size-8 rounded-full bg-background/90 backdrop-blur flex items-center justify-center hover:bg-destructive hover:text-destructive-foreground transition">
+            <X className="size-4" />
+          </button>
+        </div>
+      ) : (
+        <label className="mt-2 flex flex-col items-center justify-center aspect-[4/3] border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
+          <Upload className="size-6 text-muted-foreground mb-2" />
+          <span className="text-sm text-muted-foreground">{uploading ? "Uploading..." : "Click to upload (max 5MB)"}</span>
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            disabled={uploading}
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) onFile(f); e.target.value = ""; }}
+          />
+        </label>
+      )}
+      <Input className="mt-2 text-xs" value={value} onChange={(e) => onChange(e.target.value)} placeholder="...or paste image URL" />
+    </div>
   );
 }

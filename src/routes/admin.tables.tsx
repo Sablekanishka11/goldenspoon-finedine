@@ -65,7 +65,7 @@ function TablesAdmin() {
       </Dialog>
     }>
       <h3 className="font-serif text-xl mb-4">Floor Plan</h3>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-10">
         {tables.map((t) => (
           <div key={t.id} className="bg-card border border-border rounded-2xl p-5 shadow-[var(--shadow-soft)]">
             <div className="flex items-start justify-between mb-3">
@@ -73,15 +73,20 @@ function TablesAdmin() {
                 <p className="text-xs uppercase tracking-widest text-muted-foreground">Table</p>
                 <p className="font-serif text-3xl text-foreground">{t.table_number}</p>
               </div>
-              <button onClick={() => removeTable(t.id)} className="text-muted-foreground hover:text-destructive"><Trash2 className="size-4" /></button>
+              <div className="flex items-center gap-2">
+                <StatusBadge status={t.status} />
+                <button onClick={() => removeTable(t.id)} className="text-muted-foreground hover:text-destructive"><Trash2 className="size-4" /></button>
+              </div>
             </div>
-            <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-3"><Users className="size-3.5" /> Seats {t.capacity}</div>
-            <Select value={t.status} onValueChange={(v) => setStatus(t.id, v)}>
-              <SelectTrigger className="w-full h-9"><SelectValue /></SelectTrigger>
-              <SelectContent>{STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
-            </Select>
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-4"><Users className="size-3.5" /> Seats {t.capacity}</div>
+            <div className="grid grid-cols-3 gap-1.5">
+              <Button size="sm" variant={t.status === "Available" ? "default" : "outline"} className="text-xs px-2" onClick={() => setStatus(t.id, "Available")}>Free</Button>
+              <Button size="sm" variant={t.status === "Reserved" ? "default" : "outline"} className="text-xs px-2" onClick={() => setStatus(t.id, "Reserved")}>Reserve</Button>
+              <Button size="sm" variant={t.status === "Occupied" ? "default" : "outline"} className="text-xs px-2" onClick={() => setStatus(t.id, "Occupied")}>Occupy</Button>
+            </div>
           </div>
         ))}
+        {tables.length === 0 && <p className="col-span-full text-center text-muted-foreground py-12">No tables yet — add one to get started.</p>}
       </div>
 
       <h3 className="font-serif text-xl mb-4">Recent Bookings</h3>
