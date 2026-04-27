@@ -14,7 +14,202 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          booking_date: string
+          booking_time: string
+          created_at: string
+          customer_email: string | null
+          customer_name: string
+          customer_phone: string | null
+          id: string
+          notes: string | null
+          party_size: number
+          status: Database["public"]["Enums"]["booking_status"]
+          table_id: string | null
+        }
+        Insert: {
+          booking_date: string
+          booking_time: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name: string
+          customer_phone?: string | null
+          id?: string
+          notes?: string | null
+          party_size?: number
+          status?: Database["public"]["Enums"]["booking_status"]
+          table_id?: string | null
+        }
+        Update: {
+          booking_date?: string
+          booking_time?: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string
+          customer_phone?: string | null
+          id?: string
+          notes?: string | null
+          party_size?: number
+          status?: Database["public"]["Enums"]["booking_status"]
+          table_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_table_id_fkey"
+            columns: ["table_id"]
+            isOneToOne: false
+            referencedRelation: "restaurant_tables"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      menu_items: {
+        Row: {
+          available: boolean
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          price: number
+          updated_at: string
+        }
+        Insert: {
+          available?: boolean
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          price?: number
+          updated_at?: string
+        }
+        Update: {
+          available?: boolean
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          price?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          item_name: string
+          menu_item_id: string | null
+          order_id: string
+          price: number
+          quantity: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_name: string
+          menu_item_id?: string | null
+          order_id: string
+          price?: number
+          quantity?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_name?: string
+          menu_item_id?: string | null
+          order_id?: string
+          price?: number
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_menu_item_id_fkey"
+            columns: ["menu_item_id"]
+            isOneToOne: false
+            referencedRelation: "menu_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          customer_name: string | null
+          id: string
+          order_number: number
+          status: Database["public"]["Enums"]["order_status"]
+          table_id: string | null
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_name?: string | null
+          id?: string
+          order_number?: number
+          status?: Database["public"]["Enums"]["order_status"]
+          table_id?: string | null
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string | null
+          id?: string
+          order_number?: number
+          status?: Database["public"]["Enums"]["order_status"]
+          table_id?: string | null
+          total?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_table_id_fkey"
+            columns: ["table_id"]
+            isOneToOne: false
+            referencedRelation: "restaurant_tables"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurant_tables: {
+        Row: {
+          capacity: number
+          created_at: string
+          id: string
+          status: Database["public"]["Enums"]["table_status"]
+          table_number: number
+        }
+        Insert: {
+          capacity?: number
+          created_at?: string
+          id?: string
+          status?: Database["public"]["Enums"]["table_status"]
+          table_number: number
+        }
+        Update: {
+          capacity?: number
+          created_at?: string
+          id?: string
+          status?: Database["public"]["Enums"]["table_status"]
+          table_number?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +218,9 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      booking_status: "Pending" | "Confirmed" | "Cancelled" | "Completed"
+      order_status: "Pending" | "Preparing" | "Served" | "Cancelled"
+      table_status: "Available" | "Occupied" | "Reserved"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +347,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      booking_status: ["Pending", "Confirmed", "Cancelled", "Completed"],
+      order_status: ["Pending", "Preparing", "Served", "Cancelled"],
+      table_status: ["Available", "Occupied", "Reserved"],
+    },
   },
 } as const
