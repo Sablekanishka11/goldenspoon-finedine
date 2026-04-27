@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminLayout, StatusBadge } from "@/components/AdminLayout";
 import { Button } from "@/components/ui/button";
-import { Printer } from "lucide-react";
+import { Printer, Download } from "lucide-react";
+import { pdf, Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 
 export const Route = createFileRoute("/admin/billing")({
   component: Billing,
