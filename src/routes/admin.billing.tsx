@@ -157,8 +157,8 @@ function InvoicePDF({ order, items }: { order: any; items: any[] }) {
           <View key={it.id} style={pdfStyles.row}>
             <Text style={pdfStyles.cellQty}>{it.quantity}</Text>
             <Text style={pdfStyles.cellName}>{it.item_name}</Text>
-            <Text style={pdfStyles.cellPrice}>${Number(it.price).toFixed(2)}</Text>
-            <Text style={pdfStyles.cellTotal}>${(Number(it.price) * it.quantity).toFixed(2)}</Text>
+            <Text style={pdfStyles.cellPrice}>Rs. {Number(it.price).toFixed(2)}</Text>
+            <Text style={pdfStyles.cellTotal}>Rs. {(Number(it.price) * it.quantity).toFixed(2)}</Text>
           </View>
         ))}
 
