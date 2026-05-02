@@ -88,7 +88,7 @@ function Billing() {
               </div>
               <div className="border-t border-border mt-4 pt-4 flex justify-between font-serif text-lg">
                 <span>Total</span>
-                <span className="text-primary tabular-nums">${Number(selected.total).toFixed(2)}</span>
+                <span className="text-primary tabular-nums">₹{Number(selected.total).toFixed(2)}</span>
               </div>
             </div>
           ) : (
