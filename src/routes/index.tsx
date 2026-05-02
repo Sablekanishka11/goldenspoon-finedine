@@ -211,7 +211,7 @@ function PublicHome() {
         <div className="bg-card border border-border rounded-2xl p-8 text-center shadow-[var(--shadow-soft)]">
           <ShoppingBag className="size-10 text-primary mx-auto mb-3" />
           <p className="text-2xl font-serif mb-1">{cartCount} item{cartCount === 1 ? "" : "s"} in your cart</p>
-          <p className="text-muted-foreground mb-6">Subtotal: <span className="text-primary font-semibold tabular-nums">${cartTotal.toFixed(2)}</span></p>
+          <p className="text-muted-foreground mb-6">Subtotal: <span className="text-primary font-semibold tabular-nums">₹{cartTotal.toFixed(2)}</span></p>
           <Button onClick={() => setCartOpen(true)} disabled={cartCount === 0} size="lg" className="bg-primary">
             Review & Place Order
           </Button>
