@@ -164,7 +164,7 @@ function InvoicePDF({ order, items }: { order: any; items: any[] }) {
 
         <View style={pdfStyles.totalsRow}>
           <Text style={pdfStyles.totalLabel}>Total Due</Text>
-          <Text style={pdfStyles.totalValue}>${Number(order.total).toFixed(2)}</Text>
+          <Text style={pdfStyles.totalValue}>Rs. {Number(order.total).toFixed(2)}</Text>
         </View>
 
         <Text style={pdfStyles.footer}>Thank you for dining with Golden Spoon. © 2025 Made by Kanishka.</Text>
