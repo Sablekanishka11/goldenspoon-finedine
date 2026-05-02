@@ -297,7 +297,7 @@ function CartView({ cart, tables, total, onChangeQty, onRemove, onPlaced }: { ca
           <div key={l.item.id} className="flex gap-3 p-3 rounded-lg border border-border bg-card">
             <div className="flex-1 min-w-0">
               <p className="font-medium truncate">{l.item.name}</p>
-              <p className="text-xs text-muted-foreground">${Number(l.item.price).toFixed(2)} each</p>
+              <p className="text-xs text-muted-foreground">₹{Number(l.item.price).toFixed(2)} each</p>
             </div>
             <div className="flex items-center gap-1">
               <button onClick={() => onChangeQty(l.item.id, -1)} className="size-7 rounded-md bg-muted hover:bg-secondary flex items-center justify-center"><Minus className="size-3" /></button>
