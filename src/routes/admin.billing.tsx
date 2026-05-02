@@ -82,7 +82,7 @@ function Billing() {
                 {items.map((it) => (
                   <div key={it.id} className="flex justify-between text-sm">
                     <span>{it.quantity}× {it.item_name}</span>
-                    <span className="tabular-nums">${(Number(it.price) * it.quantity).toFixed(2)}</span>
+                    <span className="tabular-nums">₹{(Number(it.price) * it.quantity).toFixed(2)}</span>
                   </div>
                 ))}
               </div>
