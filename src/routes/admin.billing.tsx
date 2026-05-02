@@ -50,7 +50,7 @@ function Billing() {
                     <td className="px-5 py-4 font-medium">INV-{String(o.order_number).padStart(4, "0")}</td>
                     <td className="px-5 py-4">{o.customer_name ?? "—"}</td>
                     <td className="px-5 py-4"><StatusBadge status={o.status} /></td>
-                    <td className="px-5 py-4 text-right tabular-nums">${Number(o.total).toFixed(2)}</td>
+                    <td className="px-5 py-4 text-right tabular-nums">₹{Number(o.total).toFixed(2)}</td>
                     <td className="px-5 py-4 text-right"><Button size="sm" variant="outline" onClick={() => openInvoice(o)}>View</Button></td>
                   </tr>
                 ))}
