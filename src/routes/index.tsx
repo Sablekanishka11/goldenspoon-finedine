@@ -171,7 +171,7 @@ function PublicHome() {
               <div className="p-6 flex-1 flex flex-col">
                 <div className="flex items-baseline justify-between gap-3 mb-2">
                   <h3 className="font-serif text-xl text-foreground">{item.name}</h3>
-                  <span className="font-serif text-xl text-primary tabular-nums">${Number(item.price).toFixed(2)}</span>
+                  <span className="font-serif text-xl text-primary tabular-nums">₹{Number(item.price).toFixed(2)}</span>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed flex-1">{item.description}</p>
                 <div className="flex items-center justify-between mt-4">
