@@ -328,7 +328,7 @@ function CartView({ cart, tables, total, onChangeQty, onRemove, onPlaced }: { ca
         </div>
         <div className="flex justify-between items-center pt-2 border-t border-border">
           <span className="text-sm text-muted-foreground">Total</span>
-          <span className="font-serif text-2xl text-primary tabular-nums">${total.toFixed(2)}</span>
+          <span className="font-serif text-2xl text-primary tabular-nums">₹{total.toFixed(2)}</span>
         </div>
         <Button onClick={placeOrder} disabled={submitting} className="w-full" size="lg">
           {submitting ? "Placing..." : "Place Order"}
