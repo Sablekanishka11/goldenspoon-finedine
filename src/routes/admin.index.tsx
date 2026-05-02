@@ -69,7 +69,7 @@ function Dashboard() {
                     <td className="py-4">{o.customer_name ?? "—"}</td>
                     <td className="py-4 text-muted-foreground">{new Date(o.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</td>
                     <td className="py-4"><StatusBadge status={o.status} /></td>
-                    <td className="py-4 text-right tabular-nums font-medium">${Number(o.total).toFixed(2)}</td>
+                    <td className="py-4 text-right tabular-nums font-medium">₹{Number(o.total).toFixed(2)}</td>
                   </tr>
                 ))}
                 {recent.length === 0 && (
