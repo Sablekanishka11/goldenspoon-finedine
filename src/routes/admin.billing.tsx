@@ -31,8 +31,8 @@ function Billing() {
   return (
     <AdminLayout title="Billing & Invoices" subtitle="Generate invoices and review revenue">
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-        <div className="bg-card border border-border rounded-2xl p-5"><p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Total Revenue</p><p className="font-serif text-3xl text-primary tabular-nums">${totalRevenue.toFixed(2)}</p></div>
-        <div className="bg-card border border-border rounded-2xl p-5"><p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Outstanding</p><p className="font-serif text-3xl text-accent-foreground tabular-nums">${outstanding.toFixed(2)}</p></div>
+        <div className="bg-card border border-border rounded-2xl p-5"><p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Total Revenue</p><p className="font-serif text-3xl text-primary tabular-nums">₹{totalRevenue.toFixed(2)}</p></div>
+        <div className="bg-card border border-border rounded-2xl p-5"><p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Outstanding</p><p className="font-serif text-3xl text-accent-foreground tabular-nums">₹{outstanding.toFixed(2)}</p></div>
         <div className="bg-card border border-border rounded-2xl p-5"><p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Total Orders</p><p className="font-serif text-3xl tabular-nums">{orders.length}</p></div>
       </div>
 
