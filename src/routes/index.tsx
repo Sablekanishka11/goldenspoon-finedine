@@ -171,7 +171,7 @@ function PublicHome() {
               <div className="p-6 flex-1 flex flex-col">
                 <div className="flex items-baseline justify-between gap-3 mb-2">
                   <h3 className="font-serif text-xl text-foreground">{item.name}</h3>
-                  <span className="font-serif text-xl text-primary tabular-nums">${Number(item.price).toFixed(2)}</span>
+                  <span className="font-serif text-xl text-primary tabular-nums">₹{Number(item.price).toFixed(2)}</span>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed flex-1">{item.description}</p>
                 <div className="flex items-center justify-between mt-4">
@@ -211,7 +211,7 @@ function PublicHome() {
         <div className="bg-card border border-border rounded-2xl p-8 text-center shadow-[var(--shadow-soft)]">
           <ShoppingBag className="size-10 text-primary mx-auto mb-3" />
           <p className="text-2xl font-serif mb-1">{cartCount} item{cartCount === 1 ? "" : "s"} in your cart</p>
-          <p className="text-muted-foreground mb-6">Subtotal: <span className="text-primary font-semibold tabular-nums">${cartTotal.toFixed(2)}</span></p>
+          <p className="text-muted-foreground mb-6">Subtotal: <span className="text-primary font-semibold tabular-nums">₹{cartTotal.toFixed(2)}</span></p>
           <Button onClick={() => setCartOpen(true)} disabled={cartCount === 0} size="lg" className="bg-primary">
             Review & Place Order
           </Button>
@@ -297,7 +297,7 @@ function CartView({ cart, tables, total, onChangeQty, onRemove, onPlaced }: { ca
           <div key={l.item.id} className="flex gap-3 p-3 rounded-lg border border-border bg-card">
             <div className="flex-1 min-w-0">
               <p className="font-medium truncate">{l.item.name}</p>
-              <p className="text-xs text-muted-foreground">${Number(l.item.price).toFixed(2)} each</p>
+              <p className="text-xs text-muted-foreground">₹{Number(l.item.price).toFixed(2)} each</p>
             </div>
             <div className="flex items-center gap-1">
               <button onClick={() => onChangeQty(l.item.id, -1)} className="size-7 rounded-md bg-muted hover:bg-secondary flex items-center justify-center"><Minus className="size-3" /></button>
@@ -328,7 +328,7 @@ function CartView({ cart, tables, total, onChangeQty, onRemove, onPlaced }: { ca
         </div>
         <div className="flex justify-between items-center pt-2 border-t border-border">
           <span className="text-sm text-muted-foreground">Total</span>
-          <span className="font-serif text-2xl text-primary tabular-nums">${total.toFixed(2)}</span>
+          <span className="font-serif text-2xl text-primary tabular-nums">₹{total.toFixed(2)}</span>
         </div>
         <Button onClick={placeOrder} disabled={submitting} className="w-full" size="lg">
           {submitting ? "Placing..." : "Place Order"}

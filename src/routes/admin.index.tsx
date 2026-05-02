@@ -40,7 +40,7 @@ function Dashboard() {
     <AdminLayout title="Dashboard" subtitle="Service overview at a glance">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
         <StatCard icon={ShoppingBag} label="Today's Orders" value={String(stats.orders)} tint="primary" />
-        <StatCard icon={DollarSign} label="Revenue" value={`$${stats.revenue.toFixed(2)}`} tint="accent" />
+        <StatCard icon={DollarSign} label="Revenue" value={`₹${stats.revenue.toFixed(2)}`} tint="accent" />
         <StatCard icon={Armchair} label="Active Tables" value={String(stats.activeTables)} tint="primary" />
         <StatCard icon={Clock} label="Pending" value={String(stats.pending)} tint="warn" />
       </div>
@@ -69,7 +69,7 @@ function Dashboard() {
                     <td className="py-4">{o.customer_name ?? "—"}</td>
                     <td className="py-4 text-muted-foreground">{new Date(o.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</td>
                     <td className="py-4"><StatusBadge status={o.status} /></td>
-                    <td className="py-4 text-right tabular-nums font-medium">${Number(o.total).toFixed(2)}</td>
+                    <td className="py-4 text-right tabular-nums font-medium">₹{Number(o.total).toFixed(2)}</td>
                   </tr>
                 ))}
                 {recent.length === 0 && (
@@ -95,7 +95,7 @@ function Dashboard() {
                   <p className="font-medium text-sm truncate">{m.name}</p>
                   <p className="text-xs text-muted-foreground truncate">{m.description}</p>
                 </div>
-                <div className="font-serif text-primary tabular-nums">${Number(m.price).toFixed(2)}</div>
+                <div className="font-serif text-primary tabular-nums">₹{Number(m.price).toFixed(2)}</div>
               </div>
             ))}
           </div>

@@ -101,7 +101,7 @@ function MenuAdmin() {
             <div className="p-5">
               <div className="flex items-baseline justify-between gap-2 mb-1">
                 <h3 className="font-serif text-lg leading-tight">{item.name}</h3>
-                <span className="font-serif text-primary tabular-nums">${Number(item.price).toFixed(2)}</span>
+                <span className="font-serif text-primary tabular-nums">₹{Number(item.price).toFixed(2)}</span>
               </div>
               <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{item.description}</p>
               <div className="flex items-center justify-between">

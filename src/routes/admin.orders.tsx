@@ -66,7 +66,7 @@ function OrdersAdmin() {
                   <td className="px-5 py-4 text-muted-foreground">{o.restaurant_tables?.table_number ? `Table ${o.restaurant_tables.table_number}` : "Takeaway"}</td>
                   <td className="px-5 py-4 text-muted-foreground">{new Date(o.created_at).toLocaleString([], { dateStyle: "short", timeStyle: "short" })}</td>
                   <td className="px-5 py-4"><StatusBadge status={o.status} /></td>
-                  <td className="px-5 py-4 text-right tabular-nums font-medium">${Number(o.total).toFixed(2)}</td>
+                  <td className="px-5 py-4 text-right tabular-nums font-medium">₹{Number(o.total).toFixed(2)}</td>
                   <td className="px-5 py-4">
                     <Select value={o.status} onValueChange={(v) => updateStatus(o.id, v)}>
                       <SelectTrigger className="w-36 h-8"><SelectValue /></SelectTrigger>

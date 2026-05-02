@@ -31,8 +31,8 @@ function Billing() {
   return (
     <AdminLayout title="Billing & Invoices" subtitle="Generate invoices and review revenue">
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-        <div className="bg-card border border-border rounded-2xl p-5"><p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Total Revenue</p><p className="font-serif text-3xl text-primary tabular-nums">${totalRevenue.toFixed(2)}</p></div>
-        <div className="bg-card border border-border rounded-2xl p-5"><p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Outstanding</p><p className="font-serif text-3xl text-accent-foreground tabular-nums">${outstanding.toFixed(2)}</p></div>
+        <div className="bg-card border border-border rounded-2xl p-5"><p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Total Revenue</p><p className="font-serif text-3xl text-primary tabular-nums">₹{totalRevenue.toFixed(2)}</p></div>
+        <div className="bg-card border border-border rounded-2xl p-5"><p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Outstanding</p><p className="font-serif text-3xl text-accent-foreground tabular-nums">₹{outstanding.toFixed(2)}</p></div>
         <div className="bg-card border border-border rounded-2xl p-5"><p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Total Orders</p><p className="font-serif text-3xl tabular-nums">{orders.length}</p></div>
       </div>
 
@@ -50,7 +50,7 @@ function Billing() {
                     <td className="px-5 py-4 font-medium">INV-{String(o.order_number).padStart(4, "0")}</td>
                     <td className="px-5 py-4">{o.customer_name ?? "—"}</td>
                     <td className="px-5 py-4"><StatusBadge status={o.status} /></td>
-                    <td className="px-5 py-4 text-right tabular-nums">${Number(o.total).toFixed(2)}</td>
+                    <td className="px-5 py-4 text-right tabular-nums">₹{Number(o.total).toFixed(2)}</td>
                     <td className="px-5 py-4 text-right"><Button size="sm" variant="outline" onClick={() => openInvoice(o)}>View</Button></td>
                   </tr>
                 ))}
@@ -82,13 +82,13 @@ function Billing() {
                 {items.map((it) => (
                   <div key={it.id} className="flex justify-between text-sm">
                     <span>{it.quantity}× {it.item_name}</span>
-                    <span className="tabular-nums">${(Number(it.price) * it.quantity).toFixed(2)}</span>
+                    <span className="tabular-nums">₹{(Number(it.price) * it.quantity).toFixed(2)}</span>
                   </div>
                 ))}
               </div>
               <div className="border-t border-border mt-4 pt-4 flex justify-between font-serif text-lg">
                 <span>Total</span>
-                <span className="text-primary tabular-nums">${Number(selected.total).toFixed(2)}</span>
+                <span className="text-primary tabular-nums">₹{Number(selected.total).toFixed(2)}</span>
               </div>
             </div>
           ) : (
@@ -157,14 +157,14 @@ function InvoicePDF({ order, items }: { order: any; items: any[] }) {
           <View key={it.id} style={pdfStyles.row}>
             <Text style={pdfStyles.cellQty}>{it.quantity}</Text>
             <Text style={pdfStyles.cellName}>{it.item_name}</Text>
-            <Text style={pdfStyles.cellPrice}>${Number(it.price).toFixed(2)}</Text>
-            <Text style={pdfStyles.cellTotal}>${(Number(it.price) * it.quantity).toFixed(2)}</Text>
+            <Text style={pdfStyles.cellPrice}>Rs. {Number(it.price).toFixed(2)}</Text>
+            <Text style={pdfStyles.cellTotal}>Rs. {(Number(it.price) * it.quantity).toFixed(2)}</Text>
           </View>
         ))}
 
         <View style={pdfStyles.totalsRow}>
           <Text style={pdfStyles.totalLabel}>Total Due</Text>
-          <Text style={pdfStyles.totalValue}>${Number(order.total).toFixed(2)}</Text>
+          <Text style={pdfStyles.totalValue}>Rs. {Number(order.total).toFixed(2)}</Text>
         </View>
 
         <Text style={pdfStyles.footer}>Thank you for dining with Golden Spoon. © 2025 Made by Kanishka.</Text>
