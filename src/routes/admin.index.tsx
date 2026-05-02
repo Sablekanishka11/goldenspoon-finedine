@@ -40,7 +40,7 @@ function Dashboard() {
     <AdminLayout title="Dashboard" subtitle="Service overview at a glance">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
         <StatCard icon={ShoppingBag} label="Today's Orders" value={String(stats.orders)} tint="primary" />
-        <StatCard icon={DollarSign} label="Revenue" value={`$${stats.revenue.toFixed(2)}`} tint="accent" />
+        <StatCard icon={DollarSign} label="Revenue" value={`₹${stats.revenue.toFixed(2)}`} tint="accent" />
         <StatCard icon={Armchair} label="Active Tables" value={String(stats.activeTables)} tint="primary" />
         <StatCard icon={Clock} label="Pending" value={String(stats.pending)} tint="warn" />
       </div>
