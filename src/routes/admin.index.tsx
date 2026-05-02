@@ -95,7 +95,7 @@ function Dashboard() {
                   <p className="font-medium text-sm truncate">{m.name}</p>
                   <p className="text-xs text-muted-foreground truncate">{m.description}</p>
                 </div>
-                <div className="font-serif text-primary tabular-nums">${Number(m.price).toFixed(2)}</div>
+                <div className="font-serif text-primary tabular-nums">₹{Number(m.price).toFixed(2)}</div>
               </div>
             ))}
           </div>
